@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		501631E42986DBF800C645A1 /* OpenWeatherAPI in Resources */ = {isa = PBXBuildFile; fileRef = 501631E32986DBF800C645A1 /* OpenWeatherAPI */; };
+		501631E72986E9DF00C645A1 /* OpenWeatherAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 501631E62986E9DF00C645A1 /* OpenWeatherAPI */; };
 		509B614829868E66002B18FB /* WeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509B614729868E66002B18FB /* WeatherApp.swift */; };
 		509B614A29868E66002B18FB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509B614929868E66002B18FB /* ContentView.swift */; };
 		509B614C29868E68002B18FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 509B614B29868E68002B18FB /* Assets.xcassets */; };
@@ -14,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		501631E32986DBF800C645A1 /* OpenWeatherAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OpenWeatherAPI; sourceTree = "<group>"; };
 		509B614429868E66002B18FB /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		509B614729868E66002B18FB /* WeatherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApp.swift; sourceTree = "<group>"; };
 		509B614929868E66002B18FB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,17 +29,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				501631E72986E9DF00C645A1 /* OpenWeatherAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		501631E52986E9DF00C645A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		509B613B29868E66002B18FB = {
 			isa = PBXGroup;
 			children = (
 				509B614629868E66002B18FB /* Weather */,
+				509B615729868FD8002B18FB /* LocalPackages */,
 				509B614529868E66002B18FB /* Products */,
+				501631E52986E9DF00C645A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +80,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		509B615729868FD8002B18FB /* LocalPackages */ = {
+			isa = PBXGroup;
+			children = (
+				501631E32986DBF800C645A1 /* OpenWeatherAPI */,
+			);
+			path = LocalPackages;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,6 +104,9 @@
 			dependencies = (
 			);
 			name = Weather;
+			packageProductDependencies = (
+				501631E62986E9DF00C645A1 /* OpenWeatherAPI */,
+			);
 			productName = Weather;
 			productReference = 509B614429868E66002B18FB /* Weather.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +151,7 @@
 			files = (
 				509B614F29868E68002B18FB /* Preview Assets.xcassets in Resources */,
 				509B614C29868E68002B18FB /* Assets.xcassets in Resources */,
+				501631E42986DBF800C645A1 /* OpenWeatherAPI in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +366,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		501631E62986E9DF00C645A1 /* OpenWeatherAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OpenWeatherAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 509B613C29868E66002B18FB /* Project object */;
 }

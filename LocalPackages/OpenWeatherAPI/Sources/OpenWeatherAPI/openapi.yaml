@@ -1,0 +1,206 @@
+openapi: 3.0.0
+
+info: 
+  title: OpenWeather API
+  description: Get access to current weather, minute forecast for 1 hour, hourly forecast for 48 hours, daily forecast for 8 days.
+  version: 3.0.0
+servers:
+  - url: https://api.openweathermap.org/
+paths:
+  /data/3.0/onecall:
+    get:
+      operationId: getWeatherForecast
+      summary: Call weather data for one location
+      description: Just one API call and get all your essential weather data for a specific location
+      parameters:
+        - in: query
+          name: lat
+          description: The latitude cordinate of the location of your interest. Must use with `lon`.
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: lon
+          description: Longitude cordinate of the location of your interest. Must use with `lat`.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':    # status code
+          description: Success
+          content:
+            application/json:
+              schema:                
+                $ref: '#/components/schemas/OnecallResponse'
+        '404':    # status code
+          description: Not found response
+          content:
+            text/plain:
+              schema:
+                title: Weather not found
+                type: string
+  /geo/1.0/direct:
+    get:
+      operationId: directGeocode
+      summary: Get coordinates
+      description: Direct geocoding allows to get geographical coordinates (lat, lon) by using name of the location (city name or area name).
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':    # status code
+          description: Success
+          content:
+            application/json:
+              schema:                
+                $ref: '#/components/schemas/DirectGeocodingResponse'
+        '404':    # status code
+          description: Not found response
+          content:
+            text/plain:
+              schema:
+                title: Coordinates not found
+                type: string
+  /geo/1.0/reverse:
+    get:
+      operationId: reverseGeocode
+      summary: Get name of the location
+      description: Reverse geocoding allows to get name of the location (city name or area name) by using geografical coordinates (lat, lon).
+      parameters:
+        - in: query
+          name: lat
+          description: The latitude cordinate of the location of your interest. Must use with `lon`.
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: lon
+          description: Longitude cordinate of the location of your interest. Must use with `lat`.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':    # status code
+          description: Success
+          content:
+            application/json:
+              schema:                
+                $ref: '#/components/schemas/ReverseGeocodingResponse'
+        '404':    # status code
+          description: Not found response
+          content:
+            text/plain:
+              schema:
+                title: Location not found
+                type: string
+    
+security:
+- app_id: []
+                  
+components:
+  schemas:
+    OnecallResponse:
+      type: object
+      properties:
+        lon:
+          type: number
+          description: City geo location, longitude
+        lat:
+          type: number
+          description: City geo location, latitude
+        current:
+          $ref: '#/components/schemas/ForecastData'
+        hourly:
+          title: Hourly forecast weather data
+          type: array
+          items:
+            $ref: '#/components/schemas/ForecastData'
+        daily:
+          title: Daily forecast weather data
+          type: array
+          items:
+            $ref: '#/components/schemas/ForecastData'
+    ForecastData:
+      type: object
+      properties:
+        dt:
+          type: integer
+          description: Time of data calculation, unix, UTC
+          format: int32
+        temperature:
+          type: integer
+          description: 'Temperature. Units - default: Kelvin, metric: Celsius, imperial: Fahrenheit.'
+          format: int32
+        humidity:
+          type: integer
+          description: Humidity, %
+          format: int32
+        wind_speed:
+          type: integer
+          description: 'Wind speed. Units - default: meter/sec, metric: meter/sec, imperial: miles/hour.'
+          format: int32
+        wind_deg:
+          type: integer
+          description: Wind direction, degrees (meteorological)
+          format: int32
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weather'
+          description: (more info Weather condition codes)
+    Weather:
+      title: Weather
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Weather condition id
+          format: int32
+        main:
+          type: string
+          description: Group of weather parameters (Rain, Snow, Extreme etc.)
+          example: Clouds
+        description:
+          type: string
+          description: Weather condition within the group
+        icon:
+          type: string
+          description: Weather icon id
+    DirectGeocodingResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/LocationData'
+    ReverseGeocodingResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/LocationData'
+    LocationData:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the found location
+        local_names:
+          type: object
+          additionalProperties:
+            type: string
+            description: Name of the found location in different languages. The list of names can be different for different locations
+        lat:
+          type: number
+          description: Geographical coordinates of the found location (longitude)
+        lon:
+          type: number
+          description: Geographical coordinates of the found location (latitude)
+        country:
+          type: string
+          description: Country of the found location
+
+  securitySchemes:
+    app_id:
+      type: apiKey
+      description: API key to authorize requests.
+      name: appid
+      in: query

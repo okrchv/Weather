@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Get",
+        "repositoryURL": "https://github.com/kean/Get.git",
+        "state": {
+          "branch": null,
+          "revision": "12830cc64f31789ae6f4352d2d51d03a25fc3741",
+          "version": "2.1.6"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
