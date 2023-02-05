@@ -17,21 +17,29 @@ paths:
           name: lat
           description: The latitude cordinate of the location of your interest. Must use with `lon`.
           schema:
-            type: string
+            type: number
           required: true
         - in: query
           name: lon
           description: Longitude cordinate of the location of your interest. Must use with `lat`.
           schema:
-            type: string
+            type: number
           required: true
+        - in: query
+          name: units
+          schema:
+            type: string
+            enum:
+              - standard
+              - metric
+              - imperial
       responses:
         '200':    # status code
           description: Success
           content:
             application/json:
               schema:                
-                $ref: '#/components/schemas/OnecallResponse'
+                $ref: '#/components/schemas/LocationForecast'
         '404':    # status code
           description: Not found response
           content:
@@ -50,6 +58,12 @@ paths:
           schema:
             type: string
           required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+            
       responses:
         '200':    # status code
           description: Success
@@ -74,14 +88,20 @@ paths:
           name: lat
           description: The latitude cordinate of the location of your interest. Must use with `lon`.
           schema:
-            type: string
+            type: number
           required: true
         - in: query
           name: lon
           description: Longitude cordinate of the location of your interest. Must use with `lat`.
           schema:
-            type: string
+            type: number
           required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+
       responses:
         '200':    # status code
           description: Success
@@ -102,7 +122,7 @@ security:
                   
 components:
   schemas:
-    OnecallResponse:
+    LocationForecast:
       type: object
       properties:
         lon:
@@ -122,7 +142,13 @@ components:
           title: Daily forecast weather data
           type: array
           items:
-            $ref: '#/components/schemas/ForecastData'
+            $ref: '#/components/schemas/DailyForecastData'
+      required:
+        - lon
+        - lat
+        - current
+        - hourly
+        - daily
     ForecastData:
       type: object
       properties:
@@ -130,18 +156,16 @@ components:
           type: integer
           description: Time of data calculation, unix, UTC
           format: int32
-        temperature:
-          type: integer
+        temp:
+          type: number
           description: 'Temperature. Units - default: Kelvin, metric: Celsius, imperial: Fahrenheit.'
-          format: int32
         humidity:
           type: integer
           description: Humidity, %
           format: int32
         wind_speed:
-          type: integer
+          type: number
           description: 'Wind speed. Units - default: meter/sec, metric: meter/sec, imperial: miles/hour.'
-          format: int32
         wind_deg:
           type: integer
           description: Wind direction, degrees (meteorological)
@@ -151,6 +175,39 @@ components:
           items:
             $ref: '#/components/schemas/Weather'
           description: (more info Weather condition codes)
+      required:
+        - dt
+        - temp
+        - humidity
+        - wind_speed
+        - wind_deg
+        - weather
+    DailyForecastData:
+      type: object
+      properties:
+        dt:
+          type: integer
+          description: Time of data calculation, unix, UTC
+          format: int32
+        temp:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+          required:
+            - min
+            - max
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weather'
+          description: (more info Weather condition codes)
+      required:
+        - dt
+        - temp
+        - weather
     Weather:
       title: Weather
       type: object
@@ -168,7 +225,31 @@ components:
           description: Weather condition within the group
         icon:
           type: string
+          enum:
+          - 01d
+          - 02d
+          - 03d
+          - 04d
+          - 09d
+          - 10d
+          - 11d
+          - 13d
+          - 50d
+          - 01n
+          - 02n
+          - 03n
+          - 04n
+          - 09n
+          - 10n
+          - 11n
+          - 13n
+          - 50n
           description: Weather icon id
+      required:
+        - id
+        - main
+        - description
+        - icon
     DirectGeocodingResponse:
       type: array
       items:
@@ -197,7 +278,12 @@ components:
         country:
           type: string
           description: Country of the found location
-
+      required:
+        - name
+        - local_names
+        - lat
+        - lon
+        - country
   securitySchemes:
     app_id:
       type: apiKey

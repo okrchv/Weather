@@ -3,12 +3,21 @@
 
 import Foundation
 import Get
+import URLQueryEncoder
 
 extension Paths {
     /// Get name of the location
     ///
     /// Reverse geocoding allows to get name of the location (city name or area name) by using geografical coordinates (lat, lon).
-    static public func reverseGeocode(lat: String, lon: String) -> Request<[OpenWeatherAPI.LocationData]> {
-        Request(path: "/geo/1.0/reverse", method: "GET", query: [("lat", lat), ("lon", lon)], id: "reverseGeocode")
+    static public func reverseGeocode(lat: Double, lon: Double, limit: Int? = nil) -> Request<[OpenWeatherAPI.LocationData]> {
+        Request(path: "/geo/1.0/reverse", method: "GET", query: makeReverseGeocodeQuery(lat, lon, limit), id: "reverseGeocode")
+    }
+
+    private static func makeReverseGeocodeQuery(_ lat: Double, _ lon: Double, _ limit: Int?) -> [(String, String?)] {
+        let encoder = URLQueryEncoder()
+        encoder.encode(lat, forKey: "lat")
+        encoder.encode(lon, forKey: "lon")
+        encoder.encode(limit, forKey: "limit")
+        return encoder.items
     }
 }

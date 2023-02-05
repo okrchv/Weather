@@ -3,19 +3,41 @@
 
 import Foundation
 
-public struct Weather: Codable {
+public struct Weather: Codable, Hashable, Identifiable {
     /// Weather condition id
-    public var id: Int32?
+    public var id: Int32
     /// Group of weather parameters (Rain, Snow, Extreme etc.)
     ///
     /// Example: "Clouds"
-    public var main: String?
+    public var main: String
     /// Weather condition within the group
-    public var description: String?
+    public var description: String
     /// Weather icon id
-    public var icon: String?
+    public var icon: Icon
 
-    public init(id: Int32? = nil, main: String? = nil, description: String? = nil, icon: String? = nil) {
+    /// Weather icon id
+    public enum Icon: String, Codable, CaseIterable {
+        case _01d = "01d"
+        case _02d = "02d"
+        case _03d = "03d"
+        case _04d = "04d"
+        case _09d = "09d"
+        case _10d = "10d"
+        case _11d = "11d"
+        case _13d = "13d"
+        case _50d = "50d"
+        case _01n = "01n"
+        case _02n = "02n"
+        case _03n = "03n"
+        case _04n = "04n"
+        case _09n = "09n"
+        case _10n = "10n"
+        case _11n = "11n"
+        case _13n = "13n"
+        case _50n = "50n"
+    }
+
+    public init(id: Int32, main: String, description: String, icon: Icon) {
         self.id = id
         self.main = main
         self.description = description
@@ -24,17 +46,17 @@ public struct Weather: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: StringCodingKey.self)
-        self.id = try values.decodeIfPresent(Int32.self, forKey: "id")
-        self.main = try values.decodeIfPresent(String.self, forKey: "main")
-        self.description = try values.decodeIfPresent(String.self, forKey: "description")
-        self.icon = try values.decodeIfPresent(String.self, forKey: "icon")
+        self.id = try values.decode(Int32.self, forKey: "id")
+        self.main = try values.decode(String.self, forKey: "main")
+        self.description = try values.decode(String.self, forKey: "description")
+        self.icon = try values.decode(Icon.self, forKey: "icon")
     }
 
     public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: StringCodingKey.self)
-        try values.encodeIfPresent(id, forKey: "id")
-        try values.encodeIfPresent(main, forKey: "main")
-        try values.encodeIfPresent(description, forKey: "description")
-        try values.encodeIfPresent(icon, forKey: "icon")
+        try values.encode(id, forKey: "id")
+        try values.encode(main, forKey: "main")
+        try values.encode(description, forKey: "description")
+        try values.encode(icon, forKey: "icon")
     }
 }

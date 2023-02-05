@@ -3,18 +3,18 @@
 
 import Foundation
 
-public struct LocationData: Codable {
+public struct LocationData: Codable, Hashable {
     /// Name of the found location
-    public var name: String?
-    public var localNames: [String: String]?
+    public var name: String
+    public var localNames: [String: String]
     /// Geographical coordinates of the found location (longitude)
-    public var lat: Double?
+    public var lat: Double
     /// Geographical coordinates of the found location (latitude)
-    public var lon: Double?
+    public var lon: Double
     /// Country of the found location
-    public var country: String?
+    public var country: String
 
-    public init(name: String? = nil, localNames: [String: String]? = nil, lat: Double? = nil, lon: Double? = nil, country: String? = nil) {
+    public init(name: String, localNames: [String: String], lat: Double, lon: Double, country: String) {
         self.name = name
         self.localNames = localNames
         self.lat = lat
@@ -24,19 +24,19 @@ public struct LocationData: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: StringCodingKey.self)
-        self.name = try values.decodeIfPresent(String.self, forKey: "name")
-        self.localNames = try values.decodeIfPresent([String: String].self, forKey: "local_names")
-        self.lat = try values.decodeIfPresent(Double.self, forKey: "lat")
-        self.lon = try values.decodeIfPresent(Double.self, forKey: "lon")
-        self.country = try values.decodeIfPresent(String.self, forKey: "country")
+        self.name = try values.decode(String.self, forKey: "name")
+        self.localNames = try values.decode([String: String].self, forKey: "local_names")
+        self.lat = try values.decode(Double.self, forKey: "lat")
+        self.lon = try values.decode(Double.self, forKey: "lon")
+        self.country = try values.decode(String.self, forKey: "country")
     }
 
     public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: StringCodingKey.self)
-        try values.encodeIfPresent(name, forKey: "name")
-        try values.encodeIfPresent(localNames, forKey: "local_names")
-        try values.encodeIfPresent(lat, forKey: "lat")
-        try values.encodeIfPresent(lon, forKey: "lon")
-        try values.encodeIfPresent(country, forKey: "country")
+        try values.encode(name, forKey: "name")
+        try values.encode(localNames, forKey: "local_names")
+        try values.encode(lat, forKey: "lat")
+        try values.encode(lon, forKey: "lon")
+        try values.encode(country, forKey: "country")
     }
 }

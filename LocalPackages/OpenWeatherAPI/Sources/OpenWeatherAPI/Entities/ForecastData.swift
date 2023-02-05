@@ -3,23 +3,23 @@
 
 import Foundation
 
-public struct ForecastData: Codable {
+public struct ForecastData: Codable, Hashable {
     /// Time of data calculation, unix, UTC
-    public var dt: Int32?
+    public var dt: Int32
     /// Temperature. Units - default: Kelvin, metric: Celsius, imperial: Fahrenheit.
-    public var temperature: Int32?
+    public var temp: Double
     /// Humidity, %
-    public var humidity: Int32?
+    public var humidity: Int32
     /// Wind speed. Units - default: meter/sec, metric: meter/sec, imperial: miles/hour.
-    public var windSpeed: Int32?
+    public var windSpeed: Double
     /// Wind direction, degrees (meteorological)
-    public var windDeg: Int32?
+    public var windDeg: Int32
     /// (more info Weather condition codes)
-    public var weather: [Weather]?
+    public var weather: [Weather]
 
-    public init(dt: Int32? = nil, temperature: Int32? = nil, humidity: Int32? = nil, windSpeed: Int32? = nil, windDeg: Int32? = nil, weather: [Weather]? = nil) {
+    public init(dt: Int32, temp: Double, humidity: Int32, windSpeed: Double, windDeg: Int32, weather: [Weather]) {
         self.dt = dt
-        self.temperature = temperature
+        self.temp = temp
         self.humidity = humidity
         self.windSpeed = windSpeed
         self.windDeg = windDeg
@@ -28,21 +28,21 @@ public struct ForecastData: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: StringCodingKey.self)
-        self.dt = try values.decodeIfPresent(Int32.self, forKey: "dt")
-        self.temperature = try values.decodeIfPresent(Int32.self, forKey: "temperature")
-        self.humidity = try values.decodeIfPresent(Int32.self, forKey: "humidity")
-        self.windSpeed = try values.decodeIfPresent(Int32.self, forKey: "wind_speed")
-        self.windDeg = try values.decodeIfPresent(Int32.self, forKey: "wind_deg")
-        self.weather = try values.decodeIfPresent([Weather].self, forKey: "weather")
+        self.dt = try values.decode(Int32.self, forKey: "dt")
+        self.temp = try values.decode(Double.self, forKey: "temp")
+        self.humidity = try values.decode(Int32.self, forKey: "humidity")
+        self.windSpeed = try values.decode(Double.self, forKey: "wind_speed")
+        self.windDeg = try values.decode(Int32.self, forKey: "wind_deg")
+        self.weather = try values.decode([Weather].self, forKey: "weather")
     }
 
     public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: StringCodingKey.self)
-        try values.encodeIfPresent(dt, forKey: "dt")
-        try values.encodeIfPresent(temperature, forKey: "temperature")
-        try values.encodeIfPresent(humidity, forKey: "humidity")
-        try values.encodeIfPresent(windSpeed, forKey: "wind_speed")
-        try values.encodeIfPresent(windDeg, forKey: "wind_deg")
-        try values.encodeIfPresent(weather, forKey: "weather")
+        try values.encode(dt, forKey: "dt")
+        try values.encode(temp, forKey: "temp")
+        try values.encode(humidity, forKey: "humidity")
+        try values.encode(windSpeed, forKey: "wind_speed")
+        try values.encode(windDeg, forKey: "wind_deg")
+        try values.encode(weather, forKey: "weather")
     }
 }

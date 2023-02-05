@@ -3,12 +3,39 @@
 
 import Foundation
 import Get
+import URLQueryEncoder
 
 extension Paths {
     /// Call weather data for one location
     ///
     /// Just one API call and get all your essential weather data for a specific location
-    static public func getWeatherForecast(lat: String, lon: String) -> Request<OpenWeatherAPI.OnecallResponse> {
-        Request(path: "/data/3.0/onecall", method: "GET", query: [("lat", lat), ("lon", lon)], id: "getWeatherForecast")
+    static public func getWeatherForecast(parameters: GetWeatherForecastParameters) -> Request<OpenWeatherAPI.LocationForecast> {
+        Request(path: "/data/3.0/onecall", method: "GET", query: parameters.asQuery, id: "getWeatherForecast")
+    }
+
+    public struct GetWeatherForecastParameters {
+        public var lat: Double
+        public var lon: Double
+        public var units: Units?
+
+        public enum Units: String, Codable, CaseIterable {
+            case standard
+            case metric
+            case imperial
+        }
+
+        public init(lat: Double, lon: Double, units: Units? = nil) {
+            self.lat = lat
+            self.lon = lon
+            self.units = units
+        }
+
+        public var asQuery: [(String, String?)] {
+            let encoder = URLQueryEncoder()
+            encoder.encode(lat, forKey: "lat")
+            encoder.encode(lon, forKey: "lon")
+            encoder.encode(units, forKey: "units")
+            return encoder.items
+        }
     }
 }

@@ -3,12 +3,20 @@
 
 import Foundation
 import Get
+import URLQueryEncoder
 
 extension Paths {
     /// Get coordinates
     ///
     /// Direct geocoding allows to get geographical coordinates (lat, lon) by using name of the location (city name or area name).
-    static public func directGeocode(q: String) -> Request<[OpenWeatherAPI.LocationData]> {
-        Request(path: "/geo/1.0/direct", method: "GET", query: [("q", q)], id: "directGeocode")
+    static public func directGeocode(q: String, limit: Int? = nil) -> Request<[OpenWeatherAPI.LocationData]> {
+        Request(path: "/geo/1.0/direct", method: "GET", query: makeDirectGeocodeQuery(q, limit), id: "directGeocode")
+    }
+
+    private static func makeDirectGeocodeQuery(_ q: String, _ limit: Int?) -> [(String, String?)] {
+        let encoder = URLQueryEncoder()
+        encoder.encode(q, forKey: "q")
+        encoder.encode(limit, forKey: "limit")
+        return encoder.items
     }
 }
