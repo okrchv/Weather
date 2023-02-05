@@ -6,11 +6,32 @@
 //
 
 import SwiftUI
+import OpenWeatherAPI
 
 struct ContentView: View {
+    @EnvironmentObject private var locationStorage: LocationStorage
+    @EnvironmentObject private var locationManager: LocationManager
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        VStack(spacing: 0) {
+            if locationStorage.persisted {
+                HomeScreenView()
+            } else {
+                if locationManager.locationAccess == .denied {
+                    ManualLocationPickerView()
+                } else {
+                    LaunchScreenView()
+                }
+            }
+            
+        }
+        .ignoresSafeArea()
+        .onChange(of: locationManager.location) { location in
+            if let coordinate = location?.coordinate,
+               locationStorage.persisted == false {
+                locationStorage.store(coordinate)
+            }
+        }
     }
 }
 
